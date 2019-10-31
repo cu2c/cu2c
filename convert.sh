@@ -30,6 +30,7 @@ else
     fileList=($(find $source -type f ! -name ".*"))
 #echo $filelist
     for file in ${fileList[@]}; do
-        echo "->" $file
+        echo -e "\n->" $file
+        ./commandList.sh $file
     done
 fi
