@@ -3,8 +3,7 @@
 source=$1
 dest=$2
 
-if [ -z "$source" ]
-then
+if [ -z "$source" ]; then
     echo -e "ERROR: There is no input source. Please use the command as:\n\t./convert.sh input_source output"
 else
     if [ -z "$dest" ]; then
@@ -22,13 +21,13 @@ else
               echo -e "Synchronisation is suspended."
               exit 0
           ;;
-      esac
+       esac
     fi
 
     rsync -av --exclude=".*" $source $dest
     echo -e "Files copied from $source to $dest."
-    fileList=($(find $source -type f ! -name ".*"))
-#echo $filelist
+    fileList=($(find $dest -type f ! -name ".*"))
+
     for file in ${fileList[@]}; do
         echo -e "\n->" $file
         ./commandList.sh $file
