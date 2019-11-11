@@ -2,7 +2,7 @@
 while IFS='' read -r line || [[ -n "$line" ]]; do
     first=$(echo $line | awk '{print $1;}')
 
-    if [[ $first = "double" || $first = "int" || $first = "char" ]]; then
+    if [[ $first = "double" || $first = "float" || $first = "long" || $first = "int" || $first = "char" ]]; then
 
         echo -e "-----" #"$first     \t>>> $line"
 	lastchar=","
@@ -25,7 +25,10 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
             varname=$varname$next
 
             echo -e "$varname: $first"
+            eval "cu2c_type_$varname=$first"
             i=`expr $i + 1`
         done
     fi
 done < "$1"
+
+echo "cu2c: $cu2c_type_p_hArr"
