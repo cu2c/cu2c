@@ -8,6 +8,9 @@ __global__ void runDev(double *dArr){
     dArr[idx] = (double)idx+PI;
 }
 
+__device__ void deviceFunction(double *a, int b, double **c){
+}
+
 //Lorem ipsum dolor sit amet
 void main(){
     double *hArr, *dArr, **testD, ********snake;
