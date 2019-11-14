@@ -3,9 +3,7 @@
 #include <stdlib.h>
 #include <cuda.h>
 
-
-// Global CUDA function
-void runDev(double *dArr){
+__global__ void runDev(double *dArr){
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     dArr[idx] = (double)idx+PI;
 }
