@@ -4,6 +4,7 @@ sed -i 's:idx:cu2c_idx:g' $1
 sed -i 's: [iI][dD][xX]:cu2c_idx:g' $1
 sed -Ei "s:(cudaMemcpy\()([^,]*),([^,]*),([^;]*)(.*):\2 =\3\5:" $1
 ./cu2cAlloc.sh $1
+#sed 's:<<[^,]*:g' $1
 echo "-------------"
 sed '' $1
 

@@ -1,34 +1,44 @@
 #!/bin/bash
-while IFS='' read -r line || [[ -n "$line" ]]; do
-    first=$(echo $line | awk '{print $1;}')
+varNameList=()
+varTypeList=()
 
-    if [[ $first = "double" || $first = "float" || $first = "long" || $first = "int" || $first = "char" ]]; then
+while read -r line; do
+#    echo "->$line"
+    oneline=$(echo "$line" | sed -E "s:(size_t )([^;]*);(.*):\2:")
+    IFS=','; read -a linearray <<< "$oneline"; unset IFS;
+    for s in "${linearray[@]}"; do
+#        echo ">> [$s]"
+        s=$(echo "$s" | tr -d " \t")
+#        echo "   [$s]"
+        varname=$(echo "$s" | sed -E "s:([^=].+)=.+(.*):\1:")
+        vartype=$(echo "$s" | sed -E "s:([^=].+)=([^(]*).+\(([^)]*).+(.*):\3:")
+        if [ $varname = $vartype ]; then
+            echo "$varname: !ERROR!"
+        else
+#            echo "$varname=$vartype"
+            varNameList+=("$varname")
+            varTypeList+=("$vartype")
+        fi
+    done
+done < <(grep "size_t" $1 )
+for (( i=0; i<"${#varNameList[@]}"; i++ )); do 
+    varName=${varNameList[$i]}
+    varType=${varTypeList[$i]}
+    echo -e "$i\t$varName\t$varType"
 
-        echo -e "-----" #"$first     \t>>> $line"
-	lastchar=","
-	i=2;
-        while [[ $lastchar == "," ]]; do
-            next=$(echo $line | awk '{print $'$i';}')
-            firstchar=$(echo "${next:0:1}")
-            lastchar=$(echo "${next: -1}")
-            varname=""
+#varName="dArr"
+#varType="double"
+#echo "    cudaMalloc((void **) &dArr,dimD);" |
+sed -Ei "s:(.*)(cudaMalloc[ ]*\([ ]*\(*void[ ]*\*\*\)[ ]*\&)([^,]*)(,[ ]*)($varName)(.*):\1\3 = \($varType \*\) malloc\($varName\6:" $1
 
-            while [[ $firstchar == "*" ]]; do
-                varname=$varname"p_"
-                next=$(echo "${next: 1}")
-                firstchar=$(echo "${next:0:1}")
-            done
+#sed -E "s:(.*)(cudaMalloc[ ]*\([ ]*\(*void[ ]*\*\*\)[ ]*\&)($varName)(,[ ]*)(.*):|\1|\2|\3|\4|\5|:"
 
-            if [[ $lastchar = "," || $lastchar == ";" ]]; then
-                next=$(echo "${next:0:-1}")
-            fi
-            varname=$varname$next
+#sed -E "s:(.*)(cudaMalloc)([ ]*)\)([ ]*)((\(*void \*\*\) \&)($sedcmd)(,[ ]*)(.*):\1|\2|\3|\4|\5|\6|\7|\8:"
 
-            echo -e "$varname: $first"
-            eval "cu2c_type_$varname=$first"
-            i=`expr $i + 1`
-        done
-    fi
-done < "$1"
+#sed -E "s:(.*)(cudaMalloc\(\(*void \*\*\) \&)($sedcmd)(,[ ]*)(.*):|1\1|2\2|3\3|4\4|5\5:"
 
-echo "cu2c: $cu2c_type_p_hArr"
+
+
+#cudaMalloc((void **) &dArr,  dimD);
+#dArr = (double *) malloc(dimD);
+done
