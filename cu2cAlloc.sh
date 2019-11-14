@@ -17,11 +17,10 @@ while read -r line; do
             varTypeList+=("$vartype")
         fi
     done
-done < <(grep "size_t" $1 )
+done < <(grep "size_t" $file )
 
 for (( i=0; i<"${#varNameList[@]}"; i++ )); do 
     varName=${varNameList[$i]}
     varType=${varTypeList[$i]}
-    echo -e "$i\t$varName\t$varType"
-    sed -Ei "s:(.*)(cudaMalloc[ ]*\([ ]*\(*void[ ]*\*\*\)[ ]*\&)([^,]*)(,[ ]*)($varName)(.*):\1\3 = \($varType \*\) malloc\($varName\6:" $1
+    sed -Ei "s:(.*)(cudaMalloc[ ]*\([ ]*\(*void[ ]*\*\*\)[ ]*\&)([^,]*)(,[ ]*)($varName)(.*):\1\3 = \($varType \*\) malloc\($varName\6:" $file
 done
