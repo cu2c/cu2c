@@ -1,0 +1,4 @@
+#/usr/bash
+
+CU2C_NVCC=nvcc
+CU2C_CC=gcc
