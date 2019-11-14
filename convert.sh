@@ -26,7 +26,7 @@ else
        esac
     fi
 
-    rsync -av --exclude=".*" $src $dest
+    rsync -av --exclude=".*" $src/* $dest
     echo -e "Files copied from $src to $dest."
     fileList=($(find $dest -type f ! -name ".*"))
 
@@ -34,4 +34,6 @@ else
         echo -e "\n->" $file
         source commandList.sh
     done
+
+   sed "s/$CU2C_NVCC/$CU2C_CC/g" $dest/Makefile
 fi
