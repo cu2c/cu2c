@@ -35,5 +35,5 @@ else
         source commandList.sh
     done
 
-   sed "s/$CU2C_NVCC/$CU2C_CC/g" $dest/Makefile
+   sed -i "s/$CU2C_NVCC/$CU2C_CC/g" $dest/Makefile
 fi
