@@ -10,4 +10,8 @@ sed -Ei 's:([^_]*)(__global__ )([^(]*\()(.*):// Global CUDA function\n\1\3long c
 sed -Ei 's:(__device__)\s:// Device CUDA function\n:g' $file
 
 sed -i 's:#include <cuda.*://\0:g' $file
-#sed -i 's:#include <curand.*://\0:g' $file
+sed -i 's:#include <curand.*://\0:g' $file
+sed -i 's:curandState[^;]*;::g' $file
+sed -i 's:curand_init[^;]*:srand(time(NULL)):g' $file
+sed -i 's:curand_uniform_double[^;]*:(double)rand() / (double)RAND_MAX:g' $file
+sed -i 's:curand_uniform[^;]*:(float)rand() / (float)RAND_MAX:g' $file
