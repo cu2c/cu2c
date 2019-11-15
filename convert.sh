@@ -14,7 +14,7 @@ else
     fi
 
     if [ -d $dest ]; then
-       read -r -p "The $src folder exists. Would you like to overwrite? " response
+       read -r -p "The $dest folder exists. Would you like to overwrite? " response
        case "$response" in 
           [yY][eE][sS]|[yY])
               rm -rf $dest
@@ -31,9 +31,17 @@ else
     fileList=($(find $dest -type f ! -name ".*"))
 
     for file in ${fileList[@]}; do
-        echo -e "\n->" $file
+#        echo -e "\n->" $file
         source commandList.sh
     done
 
-   sed -i "s/$CU2C_NVCC/$CU2C_CC/g" $dest/Makefile
+#  echo -e "\n->" $dest/Makefile
+
+    sed -i "s/$CU2C_NVCC/$CU2C_CC/g" $dest/Makefile
+
+    cudaFlags=(" --ptxas-options" " -Xptxas" " -maxrregcount" " -arch" " -dlcm" " -lcurand")
+    for s in "${cudaFlags[@]}"; do
+        sed -i  "s/$s[ ]*=[ ]*[^ ]*//g" $dest/Makefile
+        sed -i "s/$s//g" $dest/Makefile
+    done
 fi
