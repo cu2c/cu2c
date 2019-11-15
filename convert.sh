@@ -31,7 +31,22 @@ else
     fileList=($(find $dest -type f ! -name ".*"))
 
     for file in ${fileList[@]}; do
-#        echo -e "\n->" $file
+
+        echo -e "\n->" $file
+        if [ "${file##*.}" == "cu" ]; then
+            fileold=$file
+            file="${fileold%.*}.c"
+            mv $fileold $file
+            echo -e "=>" $file
+        fi
+
+        if [ "${file##*.}" == "cuh" ]; then
+            fileold=$file
+            file="${fileold%.*}.h"
+            mv $fileold $file
+            echo -e "=>" $file
+        fi
+
         source commandList.sh
     done
 
