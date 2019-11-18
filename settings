@@ -1,6 +1,6 @@
 #/usr/bash
 
 CU2C_NVCC=nvcc
-CU2C_CC=gcc
+CU2C_CC=g++
 CU2C_CU=.c
 CU2C_CUH=.h
