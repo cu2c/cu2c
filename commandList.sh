@@ -15,5 +15,5 @@ sed -i 's:curandState[^;]*;::g' $file
 sed -i 's:curand_init[^;]*:srand(time(NULL)):g' $file
 sed -i 's:curand_uniform_double[^;]*:(double)rand() / (double)RAND_MAX:g' $file
 sed -i 's:curand_uniform[^;]*:(float)rand() / (float)RAND_MAX:g' $file
-sed -Ei "s:(\#include[^.]*)(\.cu):\1$CU2C_CU:g" $file
 sed -Ei "s:(\#include[^.]*)(\.cuh):\1$CU2C_CUH:g" $file
+sed -Ei "s:(\#include[^.]*)(\.cu):\1$CU2C_CU:g" $file

@@ -53,6 +53,8 @@ else
 #  echo -e "\n->" $dest/Makefile
 
     sed -i "s/$CU2C_NVCC/$CU2C_CC/g" $dest/Makefile
+    sed -i "s/\.cuh/$CU2C_CUH/g" $dest/Makefile
+    sed -i "s/\.cu/$CU2C_CU/g" $dest/Makefile
 
     cudaFlags=(" --ptxas-options" " -Xptxas" " -maxrregcount" " -arch" " -dlcm" " -lcurand")
     for s in "${cudaFlags[@]}"; do
