@@ -14,7 +14,7 @@ void main(){
     size_t dimD = 5 * sizeof(double);
     cudaMalloc((void **) &dArr,  dimD);
     cudaMemcpy(dArr, hArr, dimD, cudaMemcpyHostToDevice);
-    <<20,30>> runDev(dArr);
+/*cuda function is here*/    runDev <<<20, 30 >>> (dArr); /*HERE!*/
     cudaMemcpy(hArr, dArr, dimD, cudaMemcpyDeviceToHost);
     free(dArr);
 }

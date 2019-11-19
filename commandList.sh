@@ -5,7 +5,7 @@ sed -i 's:int cu2c\_idx[ ]*=[^;]*;:/*IDX definition removed*/:g' $file
 sed -i 's:long cu2c\_idx[ ]*=[^;]*;:/*IDX definition removed*/:g' $file
 sed -Ei "s:(cudaMemcpy\()([^,]*),([^,]*),([^;]*)(.*):\2 =\3\5:" $file
 source cu2cAlloc.sh
-sed -Ei 's:([^<]*)(<<)([^,]*)(,[ ]*.+)([^>])*(>>[ ]*)([^(]*\()(.*):\1for (long cu2c_idx = 0; cu2c_idx<\3*\5; ++cu2c_idx){\n\1    \7cu2c_idx, \8\n\1}:g' $file
+sed -Ei 's:([ ]*)([a-zA-Z0-9_]*[ ]*)(<<<[ ]*)([0-9]*)([ ]*,[ ]*)([0-9]*)([ ]*>>>[ ]*)(\(.*;)(.*):\n\1for(long cu2c_idx = 0; cu2c_idx < \4*\6 ; ++cu2c_idx){\n\1    \2\8\n\1}\9\n:g' $file
 sed -Ei 's:([^_]*)(__global__ )([^(]*\()(.*):// Global CUDA function\n\1\3long cu2c_idx, \4:g' $file
 sed -Ei 's:(__device__)\s:// Device CUDA function\n:g' $file
 
@@ -27,4 +27,13 @@ sed -Ei "s:cudaProfiler[^;]*;::g" $file
 sed -Ei "s:cudaThreadSynchronize\(\);:/*CUDA Thread synch removed*/:g" $file
 sed -i "s:cudaSuccess:true:g" $file
 sed -i "s:cudaError_t:int:g" $file
+
+cdpline=$(grep "cudaDeviceProp" $file)
+cuda_dev_prop=$(sed -E "s:(cudaDeviceProp[ ]*)(.*);:    \2:g"<<< $cdpline)
+#echo $cuda_dev_prop
+
+if [ ! -z "$cuda_dev_prop" ]; then 
+    sed -i ":$cuda_dev_prop:d" $file
+fi
+
 sed -Ei "s:cudaDeviceProp[^;]*;::g" $file

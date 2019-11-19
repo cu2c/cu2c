@@ -19,7 +19,7 @@ void main(){
     size_t dimE, dimC=sizeof(int)*8;
     cudaMalloc((void **) &dArr,  dimD);
     cudaMemcpy(dArr, hArr, dimD, cudaMemcpyHostToDevice); // HOST2DEV
-    <<20,30>> runDev(dArr);
+    runDev<<<20,30>>>(dArr);
     cudaMemcpy(hArr, dArr, dimD, cudaMemcpyDeviceToHost);
     free(dArr);
 }
