@@ -19,8 +19,10 @@ sed -Ei "s:(\#include[^.]*)(\.cuh):\1$CU2C_CUH:g" $file
 sed -Ei "s:(\#include[^.]*)(\.cu):\1$CU2C_CU:g" $file
 sed -i "s:cudaGetLastError():true:g" $file
 sed -Ei 's:(.*)(cudaGetError[^\)]*)\)(.*):\1"CU2C\: Failed error management"\3 :g' $file
-sed -Ei "s:(.*)(cudaGet[^;]*);(.*):\1/*\2;*/\3 :g" $file
-sed -Ei "s:(.*)(cudaSet[^;]*);(.*):\1/*\2;*/\3 :g" $file
+#sed -Ei "s:(.*)(cudaGet[^;]*);(.*):\1/*\2;*/\3 :g" $file
+sed -Ei "s:(.*)(cudaGet[^;]*);(.*):\1\3 :g" $file
+#sed -Ei "s:(.*)(cudaSet[^;]*);(.*):\1/*\2;*/\3 :g" $file
+sed -Ei "s:(.*)(cudaSet[^;]*);(.*):\1\3 :g" $file
 sed -Ei "s:cudaEvent[^;]*;::g" $file
 sed -Ei "s:cudaProfiler[^;]*;::g" $file
 
@@ -30,14 +32,14 @@ sed -i "s:cudaError_t:int:g" $file
 
 cdpline=$(grep "cudaDeviceProp" $file)
 cuda_dev_prop=$(sed -E "s:(cudaDeviceProp[ ]*)(.*);:    \2:g"<<< $cdpline)
-
+#cuda_dev_prop=''
 if [ ! -z "$cuda_dev_prop" ]; then
     #echo $cuda_dev_prop
     cuda_dev_prop=$(echo $cuda_dev_prop | sed 's/\.//g')
-    sed -i -e ':a' -e 'N' -e '$!ba' -e "s:\n:/*newline*/:g" $file
+    sed -i -e ':a' -e 'N' -e '$!ba' -e "s:\n:§newline§:g" $file
     #sed -Ei "s:([^;{]*$cuda_dev_prop[^;]*;):/*\1*/:g" $file
-    sed -Ei "s:([^;{]*$cuda_dev_prop[^;]*;)::g" $file
-    sed -i "s:\/\*newline\*\/:\n:g" $file
+#    sed -Ei "s:([^;{]*$cuda_dev_prop[^;]*;)::g" $file
+    sed -i "s:\§newline§:\n:g" $file
     #sed "" $file
 fi
 

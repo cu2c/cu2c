@@ -48,6 +48,7 @@ else
         fi
 
         source commandList.sh
+        source cu2cPrivate.sh
     done
 
 #  echo -e "\n->" $dest/Makefile
