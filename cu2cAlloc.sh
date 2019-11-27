@@ -4,7 +4,6 @@ varNameList=()
 varTypeList=()
 
 while read -r line; do
-#    oneline=$(echo "$line" | sed -E "s:(size_t )([^;]*);(.*):\2:")
     oneline=$(echo "$line" | sed -E "s:(size_t )([^;]*);:\2:")
     IFS=','; read -a linearray <<< "$oneline"; unset IFS;
     for s in "${linearray[@]}"; do
