@@ -4,7 +4,8 @@ sed -i 's:long [iI][dD][xX][ ]*=[ ]*[^;0-9]*;:/* CUDA index definition removed *
 sed -i 's:[iI][dD][xX]:cu2c_idx:g' $file
 
 # Modify memory management
-sed -Ei "s:(cudaMemcpy\()([^,]*),([^,]*),([^;]*)(.*):\2 =\3\5:" $file
+#sed -Ei "s:(cudaMemcpy\()([^,]*),([^,]*),([^;]*)(.*):\2 =\3\5:" $file
+sed -Ei "s:(cudaMemcpy[ ]*)([^,]*,[^,]*,[^,]*)(,[^)]*)([^;]*):memcpy\2\4:" $file
 source cu2cAlloc.sh
 sed -i 's/cudaFree/free/g' $file
 
