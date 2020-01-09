@@ -57,7 +57,7 @@ else
     sed -i "s/\.cuh/$CU2C_CUH/g" $dest/Makefile
     sed -i "s/\.cu/$CU2C_CU/g" $dest/Makefile
 
-    cudaFlags=(" --ptxas-options" " -Xptxas" " -maxrregcount" " -arch" " -dlcm" " -lcurand")
+    cudaFlags=(" --ptxas-options" " -Xptxas" " -maxrregcount" " -arch" " -dlcm" " -lcurand" " -G")
     for s in "${cudaFlags[@]}"; do
         sed -i  "s/$s[ ]*=[ ]*[^ ]*//g" $dest/Makefile
         sed -i "s/$s//g" $dest/Makefile
